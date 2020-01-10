@@ -1,0 +1,14 @@
+[Unit]
+Description=A rule based proxy tunnel
+After=network-online.target
+
+[Service]
+Type=simple
+User=proxy
+Group=proxy
+ExecStartPre=+/opt/script/setup-clash-tun.sh
+ExecStopPost=+/opt/script/clean-clash-tun.sh
+ExecStart=/usr/bin/clash -d /srv/proxy/clash
+
+[Install]
+WantedBy=multi-user.target

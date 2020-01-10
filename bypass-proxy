@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ "$USER" = "root" ];then
+/opt/script/setup-clash-cgroup.sh
+fi
+
+echo $$ > /sys/fs/cgroup/net_cls/bypass_proxy/tasks
+
+exec "$@"

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ "$#" != "1" ];then
+exit 1
+fi
+
+if [ "$USER" = "root" ];then
+/opt/script/setup-clash-cgroup.sh
+fi
+
+echo $1 > /sys/fs/cgroup/net_cls/bypass_proxy/tasks
