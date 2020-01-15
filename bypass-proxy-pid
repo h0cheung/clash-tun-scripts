@@ -4,7 +4,7 @@ if [ "$#" != "1" ];then
 exit 1
 fi
 
-if [ "$USER" = "root" ];then
+if [ "`id -u`" = "0" ];then
 /opt/script/setup-clash-cgroup.sh
 fi
 
