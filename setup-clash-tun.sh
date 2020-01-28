@@ -33,6 +33,7 @@ iptables -t mangle -F CLASH
 iptables -t mangle -A CLASH -m owner --uid-owner "$PROXY_BYPASS_USER" -j RETURN
 iptables -t mangle -A CLASH -d "$PROXY_FORCE_NETADDR" -j MARK --set-mark "$PROXY_FWMARK"
 iptables -t mangle -A CLASH -m cgroup --cgroup "$PROXY_BYPASS_CGROUP" -j RETURN
+iptables -t mangle -A CLASH -m addrtype --dst-type BROADCAST -j RETURN
 iptables -t mangle -A CLASH -m set --match-set localnetwork dst -j RETURN
 iptables -t mangle -A CLASH -j MARK --set-mark "$PROXY_FWMARK"
 
