@@ -10,7 +10,7 @@ PROXY_TUN_DEVICE_NAME="clash0"
 
 /opt/script/clean-clash-tun.sh 2>&1 > /dev/null
 
-create localnetwork hash:net
+ipset create localnetwork hash:net
 ipset add localnetwork 127.0.0.0/8
 ipset add localnetwork 10.0.0.0/8
 ipset add localnetwork 192.168.0.0/16
