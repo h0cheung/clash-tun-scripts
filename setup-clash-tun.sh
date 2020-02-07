@@ -18,6 +18,12 @@ ipset add localnetwork 192.168.0.0/16
 ipset add localnetwork 224.0.0.0/4
 ipset add localnetwork 172.16.0.0/12
 
+ipset create localnetwork6 hash:net -6
+ipset add localnetwork6 fe80::/10
+ipset add localnetwork6 ::1/128
+ipset add localnetwork6 ff00::/8
+ipset add localnetwork6 ::/128
+
 /opt/script/setup-clash-cgroup.sh
 
 ip tuntap add "$PROXY_TUN_DEVICE_NAME" mode tun user $PROXY_BYPASS_USER
@@ -27,7 +33,11 @@ ip address replace "$PROXY_TUN_ADDRESS" dev "$PROXY_TUN_DEVICE_NAME"
 
 ip route replace default dev "$PROXY_TUN_DEVICE_NAME" table "$PROXY_ROUTE_TABLE"
 
+ip -6 route replace default dev "$PROXY_TUN_DEVICE_NAME" table "$PROXY_ROUTE_TABLE"
+
 ip rule add fwmark "$PROXY_FWMARK" lookup "$PROXY_ROUTE_TABLE"
+
+ip -6 rule add fwmark "$PROXY_FWMARK" lookup "$PROXY_ROUTE_TABLE"
 
 iptables -t mangle -N CLASH
 iptables -t mangle -F CLASH
@@ -38,16 +48,36 @@ iptables -t mangle -A CLASH -m addrtype --dst-type BROADCAST -j RETURN
 iptables -t mangle -A CLASH -m set --match-set localnetwork dst -j RETURN
 iptables -t mangle -A CLASH -j MARK --set-mark "$PROXY_FWMARK"
 
+ip6tables -t mangle -N CLASH6
+ip6tables -t mangle -F CLASH6
+ip6tables -t mangle -A CLASH6 -m owner --uid-owner "$PROXY_BYPASS_USER" -j RETURN
+ip6tables -t mangle -A CLASH6 -m cgroup --cgroup "$PROXY_BYPASS_CGROUP" -j RETURN
+ip6tables -t mangle -A CLASH6 -m addrtype --dst-type BROADCAST -j RETURN
+ip6tables -t mangle -A CLASH6 -m set --match-set localnetwork6 dst -j RETURN
+ip6tables -t mangle -A CLASH6 -j MARK --set-mark "$PROXY_FWMARK"
+
 iptables -t nat -N CLASH_DNS
 iptables -t nat -F CLASH_DNS
 iptables -t nat -A CLASH_DNS -m owner --uid-owner "$PROXY_BYPASS_USER" -j RETURN
 iptables -t nat -A CLASH_DNS -m cgroup --cgroup "$PROXY_BYPASS_CGROUP" -j RETURN
 iptables -t nat -A CLASH_DNS -p udp -j REDIRECT --to-ports "$PROXY_DNS_PORT"
 
+ip6tables -t nat -N CLASH_DNS6
+ip6tables -t nat -F CLASH_DNS6
+ip6tables -t nat -A CLASH_DNS6 -m owner --uid-owner "$PROXY_BYPASS_USER" -j RETURN
+ip6tables -t nat -A CLASH_DNS6 -m cgroup --cgroup "$PROXY_BYPASS_CGROUP" -j RETURN
+ip6tables -t nat -A CLASH_DNS6 -p udp -j REDIRECT --to-ports "$PROXY_DNS_PORT"
+
 iptables -t mangle -I OUTPUT -j CLASH
 iptables -t mangle -I PREROUTING -m set ! --match-set localnetwork dst -j MARK --set-mark "$PROXY_FWMARK"
 
+ip6tables -t mangle -I OUTPUT -j CLASH6
+ip6tables -t mangle -I PREROUTING -m set ! --match-set localnetwork6 dst -j MARK --set-mark "$PROXY_FWMARK"
+
 iptables -t nat -I OUTPUT -p udp --dport 53 -j CLASH_DNS
 iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to "$PROXY_DNS_PORT"
+
+ip6tables -t nat -I OUTPUT -p udp --dport 53 -j CLASH_DNS6
+ip6tables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to "$PROXY_DNS_PORT"
 
 iptables -t filter -I OUTPUT -d "$PROXY_TUN_ADDRESS" -j REJECT
