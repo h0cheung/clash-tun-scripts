@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROXY_BYPASS_USER="proxy"
+PROXY_BYPASS_USER="nobody"
 PROXY_BYPASS_CGROUP="0x16200000"
 PROXY_FWMARK="0x162"
 PROXY_ROUTE_TABLE="0x162"
@@ -16,7 +16,7 @@ ipset add localnetwork 127.0.0.0/8
 ipset add localnetwork 10.0.0.0/8
 ipset add localnetwork 192.168.0.0/16
 ipset add localnetwork 224.0.0.0/4
-ipset add localnetwork 172.16.0.0/12 
+ipset add localnetwork 172.16.0.0/12
 
 /opt/script/setup-clash-cgroup.sh
 
@@ -39,7 +39,7 @@ iptables -t mangle -A CLASH -m set --match-set localnetwork dst -j RETURN
 iptables -t mangle -A CLASH -j MARK --set-mark "$PROXY_FWMARK"
 
 iptables -t nat -N CLASH_DNS
-iptables -t nat -F CLASH_DNS 
+iptables -t nat -F CLASH_DNS
 iptables -t nat -A CLASH_DNS -m owner --uid-owner "$PROXY_BYPASS_USER" -j RETURN
 iptables -t nat -A CLASH_DNS -m cgroup --cgroup "$PROXY_BYPASS_CGROUP" -j RETURN
 iptables -t nat -A CLASH_DNS -p udp -j REDIRECT --to-ports "$PROXY_DNS_PORT"
@@ -51,4 +51,3 @@ iptables -t nat -I OUTPUT -p udp --dport 53 -j CLASH_DNS
 iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to "$PROXY_DNS_PORT"
 
 iptables -t filter -I OUTPUT -d "$PROXY_TUN_ADDRESS" -j REJECT
-

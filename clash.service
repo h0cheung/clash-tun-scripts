@@ -4,11 +4,11 @@ After=network-online.target
 
 [Service]
 Type=simple
-User=proxy
-Group=proxy
+User=nobody
+Group=nobody
 ExecStartPre=+/opt/script/setup-clash-tun.sh
 ExecStopPost=+/opt/script/clean-clash-tun.sh
-ExecStart=/usr/bin/clash -d /srv/proxy/clash
+ExecStart=/usr/bin/clash -d /srv/clash
 
 [Install]
 WantedBy=multi-user.target
