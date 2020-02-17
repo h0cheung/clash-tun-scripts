@@ -52,7 +52,6 @@ ip6tables -t mangle -N CLASH6
 ip6tables -t mangle -F CLASH6
 ip6tables -t mangle -A CLASH6 -m owner --uid-owner "$PROXY_BYPASS_USER" -j RETURN
 ip6tables -t mangle -A CLASH6 -m cgroup --cgroup "$PROXY_BYPASS_CGROUP" -j RETURN
-ip6tables -t mangle -A CLASH6 -m addrtype --dst-type BROADCAST -j RETURN
 ip6tables -t mangle -A CLASH6 -m set --match-set localnetwork6 dst -j RETURN
 ip6tables -t mangle -A CLASH6 -j MARK --set-mark "$PROXY_FWMARK"
 
