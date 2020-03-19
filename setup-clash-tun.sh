@@ -46,7 +46,7 @@ iptables -t mangle -A CLASH -d "$PROXY_FORCE_NETADDR" -j MARK --set-mark "$PROXY
 iptables -t mangle -A CLASH -m cgroup --cgroup "$PROXY_BYPASS_CGROUP" -j RETURN
 iptables -t mangle -A CLASH -m addrtype --dst-type BROADCAST -j RETURN
 iptables -t mangle -A CLASH -m set --match-set localnetwork dst -j RETURN
-iptables -t mangle -A CLASH -p udp --dport 6771 -j RETURN
+iptables -t mangle -A CLASH -p udp --sport 6771 -j RETURN
 iptables -t mangle -A CLASH -j MARK --set-mark "$PROXY_FWMARK"
 
 ip6tables -t mangle -N CLASH6
@@ -54,6 +54,7 @@ ip6tables -t mangle -F CLASH6
 ip6tables -t mangle -A CLASH6 -m owner --uid-owner "$PROXY_BYPASS_USER" -j RETURN
 ip6tables -t mangle -A CLASH6 -m cgroup --cgroup "$PROXY_BYPASS_CGROUP" -j RETURN
 ip6tables -t mangle -A CLASH6 -m set --match-set localnetwork6 dst -j RETURN
+ip6tables -t mangle -A CLASH -p udp --sport 6771 -j RETURN
 ip6tables -t mangle -A CLASH6 -j MARK --set-mark "$PROXY_FWMARK"
 
 iptables -t nat -N CLASH_DNS
