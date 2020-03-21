@@ -6,6 +6,7 @@ After=network-online.target
 Type=simple
 User=nobody
 Group=nobody
+EnvironmentFile=/etc/clash-tun/env
 ExecStartPre=+/opt/script/setup-clash-tun.sh
 ExecStopPost=+/opt/script/clean-clash-tun.sh
 ExecStart=/usr/bin/clash -d /srv/clash
