@@ -40,7 +40,7 @@ iptables -t nat -A CLASH_DNS -p udp -j REDIRECT --to-ports "$PROXY_DNS_PORT"
 iptables -t mangle -I OUTPUT -j CLASH
 iptables -t nat -I OUTPUT -p udp --dport 53 -j CLASH_DNS
 
-if [ $ENABLE_PREROUTING = 1];then
+if [ $ENABLE_PREROUTING = 1 ];then
   iptables -t mangle -I PREROUTING -m set ! --match-set localnetwork dst -j MARK --set-mark "$PROXY_FWMARK"
   iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to "$PROXY_DNS_PORT"
 fi
@@ -74,7 +74,7 @@ if [ $ENABLE_IPv6 = 1 ];then
 
   ip6tables -t mangle -I OUTPUT -j CLASH6
   ip6tables -t nat -I OUTPUT -p udp --dport 53 -j CLASH_DNS6
-  if [ $ENABLE_PREROUTING = 1];then
+  if [ $ENABLE_PREROUTING = 1 ];then
     ip6tables -t mangle -I PREROUTING -m set ! --match-set localnetwork6 dst -j MARK --set-mark "$PROXY_FWMARK"
     ip6tables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to "$PROXY_DNS_PORT"
   fi
