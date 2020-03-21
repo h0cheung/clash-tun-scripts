@@ -20,6 +20,9 @@ fi
 iptables -t mangle -F CLASH
 iptables -t mangle -X CLASH
 
+iptables -t nat -F CLASH_DNS
+iptables -t nat -X CLASH_DNS
+
 iptables -t filter -D OUTPUT -d "$PROXY_TUN_ADDRESS" -j REJECT
 
 ipset destroy localnetwork
@@ -38,9 +41,6 @@ if [ $ENABLE_IPv6 = 1];then
 
   ip6tables -t mangle -F CLASH6
   ip6tables -t mangle -X CLASH6
-
-  iptables -t nat -F CLASH_DNS
-  iptables -t nat -X CLASH_DNS
 
   ip6tables -t nat -F CLASH_DNS6
   ip6tables -t nat -X CLASH_DNS6
