@@ -1,0 +1,12 @@
+[Unit]
+Description=Set up the cgroup earlier.
+
+[Service]
+User=root
+Type=oneshot
+RemainAfterExit=yes
+EnvironmentFile=/etc/clash-tun/env
+ExecStart=/usr/bin/bash /opt/script/setup-clash-cgroup.sh
+
+[Install]
+WantedBy=sysinit.target
