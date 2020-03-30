@@ -12,7 +12,7 @@ ipset add localnetwork 224.0.0.0/4
 ipset add localnetwork 172.16.0.0/12
 
 
-ip tuntap add "$PROXY_TUN_DEVICE_NAME" mode tun user $PROXY_BYPASS_USER
+ip tuntap add "$PROXY_TUN_DEVICE_NAME" mode tun user $PROXY_TUN_USER
 ip link set "$PROXY_TUN_DEVICE_NAME" up
 
 ip address replace "$PROXY_TUN_ADDRESS" dev "$PROXY_TUN_DEVICE_NAME"
