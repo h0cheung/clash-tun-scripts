@@ -1,6 +1,10 @@
 [Unit]
 Description=A rule based proxy tunnel
 After=network-online.target
+After=iptables.service
+After=ip6tables.service
+After=nftables.service
+After=clash-cgroups.service
 
 [Service]
 Type=simple
@@ -8,6 +12,7 @@ User=nobody
 Group=nobody
 EnvironmentFile=/etc/clash-tun/env
 Environment="PROXY_TUN_USER=nobody"
+ExecStartPre=/usr/bin/sleep 2
 ExecStartPre=+/opt/script/setup-clash-tun.sh
 ExecStopPost=+/opt/script/clean-clash-tun.sh
 ExecStart=/usr/bin/bypass-proxy /usr/bin/clash -d /srv/clash
