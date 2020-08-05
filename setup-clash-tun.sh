@@ -27,7 +27,7 @@ if [ $PROXY_BYPASS_USER ];then
 iptables -t mangle -A CLASH -m owner --uid-owner "$PROXY_BYPASS_USER" -j RETURN
 fi
 iptables -t mangle -A CLASH -d "$PROXY_FORCE_NETADDR" -j MARK --set-mark "$PROXY_FWMARK"
-iptables -t mangle -A CLASH -m cgroup --cgroup "$PROXY_BYPASS_CGROUP" -j RETURN
+iptables -t mangle -A CLASH -m cgroup --path bypass_proxy -j RETURN
 iptables -t mangle -A CLASH -m addrtype --dst-type BROADCAST -j RETURN
 iptables -t mangle -A CLASH -m set --match-set localnetwork dst -j RETURN
 iptables -t mangle -A CLASH -p udp --sport 6771 -j RETURN
@@ -38,7 +38,7 @@ iptables -t nat -F CLASH_DNS
 if [ $PROXY_BYPASS_USER ];then
 iptables -t nat -A CLASH_DNS -m owner --uid-owner "$PROXY_BYPASS_USER" -j RETURN
 fi
-iptables -t nat -A CLASH_DNS -m cgroup --cgroup "$PROXY_BYPASS_CGROUP" -j RETURN
+iptables -t nat -A CLASH_DNS -m cgroup --path bypass_proxy -j RETURN
 iptables -t nat -A CLASH_DNS -p udp -j REDIRECT --to-ports "$PROXY_DNS_PORT"
 
 iptables -t mangle -I OUTPUT -j CLASH
@@ -65,7 +65,7 @@ if [ $ENABLE_IPv6 = 1 ];then
   if [ $PROXY_BYPASS_USER ];then
   ip6tables -t mangle -A CLASH6 -m owner --uid-owner "$PROXY_BYPASS_USER" -j RETURN
   fi
-  ip6tables -t mangle -A CLASH6 -m cgroup --cgroup "$PROXY_BYPASS_CGROUP" -j RETURN
+  ip6tables -t mangle -A CLASH6 -m cgroup --path bypass_proxy -j RETURN
   ip6tables -t mangle -A CLASH6 -m set --match-set localnetwork6 dst -j RETURN
   ip6tables -t mangle -A CLASH6 -p udp --sport 6771 -j RETURN
   ip6tables -t mangle -A CLASH6 -j MARK --set-mark "$PROXY_FWMARK"
@@ -75,7 +75,7 @@ if [ $ENABLE_IPv6 = 1 ];then
   if [ $PROXY_BYPASS_USER ];then
   ip6tables -t nat -A CLASH_DNS6 -m owner --uid-owner "$PROXY_BYPASS_USER" -j RETURN
   fi
-  ip6tables -t nat -A CLASH_DNS6 -m cgroup --cgroup "$PROXY_BYPASS_CGROUP" -j RETURN
+  ip6tables -t nat -A CLASH_DNS6 -m cgroup --path bypass_proxy -j RETURN
   ip6tables -t nat -A CLASH_DNS6 -p udp -j REDIRECT --to-ports "$PROXY_DNS_PORT"
 
   ip6tables -t mangle -I OUTPUT -j CLASH6

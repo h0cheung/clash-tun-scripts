@@ -1,5 +1,7 @@
 [Unit]
 Description=Set up the cgroup earlier.
+Before=clash-tun.service
+Before=clash-tun@.service
 
 [Service]
 User=root

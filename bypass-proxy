@@ -4,6 +4,6 @@ if [ "`id -u`" = "0" ];then
 /opt/script/setup-clash-cgroup.sh
 fi
 
-echo $$ > /sys/fs/cgroup/net_cls/bypass_proxy/tasks
+bypass-proxy-pid $$
 
 exec "$@"
