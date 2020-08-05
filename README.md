@@ -1,44 +1,15 @@
-## Kr328 的 Clash 配置脚本们
+## Clash-tun Scripts
 
-**仅针对 Linux**
+Some scripts to use with [[comzyh/clash](https://github.com/comzyh/clash)] and cgroup v2.
 
+**Only for Linux with cgroup v2 support**. For systemd user, add `systemd.unified_cgroup_hierarchy=1` to Kernel parameters. You can also try other way to mount cgroup v2 at `/sys/fs/cgroup`
 
+Archlinux users can use the package `clash-tun` in AUR.
 
-#### setup-clash-tun.sh
+`bypass-proxy <command>` to run command and make it bypass the clash proxy.
 
-简单配置 Clash 的 tun 代理
+`bypass-proxy-pid <pid>` to make a process bypass the clash proxy.
 
+#### Manual Setup
 
-
-#### clean-clash-tun.sh
-
-清理 clash 的 tun 代理
-
-
-
-#### setup-clash-cgroup.sh
-
-配置 绕过 Clash 的 应用的 cgroup
-
-
-
-#### clash.service
-
-Clash 的 systemd 服务单元
-
-
-
-#### bypass-proxy
-
-利用 cgroup 使部分进程绕过 Clash
-
-用法 `bypass-proxy 命令...`
-
-
-
-#### bypass-proxy-pid
-
-同上
-
-用法 `bypass-proxy-pid <PID>`
-
+Install `*.sh` scripts to `/opt/script/`, `bypass-proxy` and `bypass-proxy-pid` (need to be compiled, you can use `g++ -O2 -static bypass-proxy-pid.cc -o bypass-proxy-pid`) to `/usr/bin/`, env to `/etc/clash-tun/`, and then use the systemd services;
