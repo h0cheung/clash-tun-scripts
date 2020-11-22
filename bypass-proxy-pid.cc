@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
   } else {
     std::ofstream fout;
     struct stat sb;
-    if(stat("/sys/fs/cgroup/system.slice/", &sb) && S_ISDIR(sb.st_mode))
+    if(stat("/sys/fs/cgroup/system.slice/", &sb), S_ISDIR(sb.st_mode))
       fout.open("/sys/fs/cgroup/bypass_proxy/cgroup.procs");
     else
       fout.open("/sys/fs/cgroup/net_cls/bypass_proxy/tasks");
