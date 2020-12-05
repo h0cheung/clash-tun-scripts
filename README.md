@@ -1,8 +1,8 @@
 ## Clash-tun Scripts
 
-Some scripts to use with [[comzyh/clash](https://github.com/comzyh/clash)] and cgroup v2.
+Some scripts to use with [comzyh/clash](https://github.com/comzyh/clash) and cgroup v2.
 
-**Only for Linux with cgroup v2 support**. For systemd user, add `systemd.unified_cgroup_hierarchy=1` to kernel parameters. You can also try other way to mount cgroup v2 at `/sys/fs/cgroup`
+**~~Only for Linux with cgroup v2 support.~~ Support both cgroup v1 and v2.**
 
 Archlinux users can use the package `clash-tun` in AUR.
 
